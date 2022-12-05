@@ -90,6 +90,7 @@ namespace FivePebblesBadApple
         }
     }
 
+    // Credit to woutkolkman for this extension class, which allows a projected image to be created from a texture
     public class ProjectedImageFromMemory : ProjectedImage
     {
         public ProjectedImageFromMemory(List<Texture2D> textures, List<string> imageNames, int cycleTime) : base(imageNames, cycleTime)

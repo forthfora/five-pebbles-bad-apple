@@ -14,7 +14,7 @@ namespace FivePebblesBadApple
             // Rain World Startup
             On.RainWorld.Start += RainWorldStartHook;
 
-            On.SoundLoader.LoadSounds += SoundLoaderLoadSoundsHook;
+            //  On.RainWorldGame.ContinuePaused += ContinuePausedHook;
 
             //ProjectedImage constructor hook for hiding LoadFile()
             On.ProjectedImage.ctor += ProjectedImageCtorHook;
@@ -31,12 +31,11 @@ namespace FivePebblesBadApple
             FivePebblesBadApple.SELF.Logger_p.LogInfo("Finished Loading Frames!");
         }
 
-        private static void SoundLoaderLoadSoundsHook(On.SoundLoader.orig_LoadSounds orig, SoundLoader self)
-        {
-            orig(self);
-
-            // self.soundTriggers[(int)EnumExt_FPBA.Bad_Apple] = new SoundLoader.SoundTrigger(EnumExt_FPBA.Bad_Apple, null, 1.0f, self, new string[] { });
-        }
+        //private static void ContinuePausedHook(On.RainWorldGame.orig_ContinuePaused orig, RainWorldGame self)
+        //{
+        //    orig(self);
+        //    frameTimer = Time.time;
+        //}
 
         // ProjectedImage constructor hook for hiding LoadFile() (function cannot be overridden or hidden for ProjectedImage class)
         static void ProjectedImageCtorHook(On.ProjectedImage.orig_ctor orig, ProjectedImage self, List<string> imageNames, int cycleTime)
@@ -52,8 +51,18 @@ namespace FivePebblesBadApple
             orig(self, imageNames, cycleTime);
         }
 
+        // Toggles frame debug messages to Bepinex's console
+        // I have no idea if these affect performance, but better safe than sorry!
+        const bool DEBUG_MESSAGES = false;
+
+        // How long until the video starts playing in seconds from when slugcat enters the room
+        const float START_DELAY = 3.0f;
+
         // How many frames are displayed each second
         const int FRAME_RATE = 30;
+
+        // Which frame the video should end on;
+        const int FINAL_FRAME = 6572;
 
         // How many frames should we wait until the projected image is destroyed?
         // This is necessary to prevent the projected image flickering, and I have zero clue why!
@@ -74,6 +83,7 @@ namespace FivePebblesBadApple
         public static int midY => minY + ((maxY - minY) / 2);
         public static int midX => minX + ((maxX - minX) / 2);
 
+        private static float? startTimer;
 
         // The index of the current frame, and a timer
         private static int currentFrame = 0;
@@ -81,22 +91,59 @@ namespace FivePebblesBadApple
 
         private static Dictionary<int, ProjectedImage> projectedImageBuffer = new Dictionary<int, ProjectedImage>();
 
-        private static bool isVideoPlaying = false;
+        private static bool isVideoStarted = false;
+        private static bool isVideoFinished = false;
 
         private static void SSOracleBehaviorUpdateHook(On.SSOracleBehavior.orig_Update orig, SSOracleBehavior self, bool eu)
         {
             orig(self, eu);
 
-            if (!isVideoPlaying)
+            if (isVideoFinished) return;
+
+            if (!isVideoStarted)
             {
-                isVideoPlaying = true;
+                if (startTimer == null)
+                {
+                    startTimer = Time.time;
+                    FivePebblesBadApple.SELF.Logger_p.LogInfo("Waiting for start delay...");
+                }
+
+                // Wait for start delay
+                if (Time.time - startTimer <= START_DELAY) return;
+
+                FivePebblesBadApple.SELF.Logger_p.LogInfo("Started playing!");
+                isVideoStarted = true;
                 frameTimer = Time.time;
                 self.action = EnumExt_FPBA.Degeneracy_BadApple;
 
                 //self.oracle.room.PlaySound(EnumExt_FPBA.Bad_Apple, self.oracle.firstChunk);
             }
+            else
+            {
+                // Wait until a frame in time has passed
+                if (Time.time - frameTimer < 1.0f / FRAME_RATE) return;
+            }
 
-            if (Time.time - frameTimer < 1.0f / FRAME_RATE) return;
+
+            // Skip frames when necessary to keep in time
+            int skippedFrames = (int)((Time.time - frameTimer) * FRAME_RATE) - 1;
+            currentFrame += skippedFrames;
+
+            // Stop the video when we pass the final frame
+            if (currentFrame > FINAL_FRAME)
+            {
+                isVideoFinished = true;
+
+                // Horrible code repetition because I am lazy
+                int targetFrame = currentFrame - IMAGE_DESTRUCTION_FRAME_DELAY - skippedFrames;
+                if (projectedImageBuffer.ContainsKey(targetFrame))
+                {
+                    self.oracle.myScreen.room.RemoveObject(projectedImageBuffer[targetFrame]);
+                    FivePebblesBadApple.SELF.Logger_p.LogInfo("Video has ended! Removing Final Image: " + projectedImageBuffer[targetFrame]);
+                    return;
+                }
+            }
+
             frameTimer = Time.time;
 
             string frameName = FivePebblesBadApple.frames.ElementAt(currentFrame).Key;
@@ -113,27 +160,33 @@ namespace FivePebblesBadApple
             self.oracle.myScreen.room.AddObject(projectedImage);
 
             // There is also this offset to 'match background', but I am not sure why it is needed: new Vector2(-7.5f, 15.5f);
-            projectedImage.pos = new Vector2(midX, midY);
+            // We'll offset the images to the left slightly so they display a bit better in the chamber
+            projectedImage.pos = new Vector2(midX - 17.5f, midY);
 
 
-            if (currentFrame - IMAGE_DESTRUCTION_FRAME_DELAY >= 0)
+            int lastImageFrame = currentFrame - IMAGE_DESTRUCTION_FRAME_DELAY - skippedFrames;
+            if (projectedImageBuffer.ContainsKey(lastImageFrame))
             {
-                int targetFrame = currentFrame - IMAGE_DESTRUCTION_FRAME_DELAY;
-                self.oracle.myScreen.room.RemoveObject(projectedImageBuffer[targetFrame]);
-                FivePebblesBadApple.SELF.Logger_p.LogInfo("Removed Image: " + projectedImageBuffer[targetFrame]);
+                self.oracle.myScreen.room.RemoveObject(projectedImageBuffer[lastImageFrame]);
+                if (DEBUG_MESSAGES) FivePebblesBadApple.SELF.Logger_p.LogInfo("Removed Image: " + lastImageFrame);
             }
 
-            if (currentFrame - IMAGE_DESTRUCTION_FRAME_DELAY - ATLAS_DESTRUCTION_FRAME_DELAY >= 0)
+            int lastAtlasFrame = currentFrame - IMAGE_DESTRUCTION_FRAME_DELAY - ATLAS_DESTRUCTION_FRAME_DELAY - skippedFrames;
+            if (lastAtlasFrame >= 0)
             {
-                int targetFrame = currentFrame - IMAGE_DESTRUCTION_FRAME_DELAY - ATLAS_DESTRUCTION_FRAME_DELAY;
-                Futile.atlasManager.ActuallyUnloadAtlasOrImage(FivePebblesBadApple.frames.ElementAt(targetFrame).Key);
-                FivePebblesBadApple.SELF.Logger_p.LogInfo("Removed Atlas: " + FivePebblesBadApple.frames.ElementAt(targetFrame).Key);
+                string lastFrameName = FivePebblesBadApple.frames.ElementAt(lastAtlasFrame).Key;
+                if (Futile.atlasManager.DoesContainAtlas(lastFrameName))
+                {
+                    Futile.atlasManager.ActuallyUnloadAtlasOrImage(lastFrameName);
+                    if (DEBUG_MESSAGES) FivePebblesBadApple.SELF.Logger_p.LogInfo("Removed Atlas: " + lastFrameName);
+                }
             }
 
             projectedImageBuffer[currentFrame] = projectedImage;
             currentFrame++;
 
-            FivePebblesBadApple.SELF.Logger_p.LogInfo("Displaying Frame: " + frameName);
+            if (skippedFrames != 0) FivePebblesBadApple.SELF.Logger_p.LogInfo("Skipped Frames: " + skippedFrames);
+            if (DEBUG_MESSAGES) FivePebblesBadApple.SELF.Logger_p.LogInfo("Displaying Frame " + currentFrame + ": " + frameName);
         }
     }
 }
