@@ -14,7 +14,7 @@ namespace FivePebblesBadApple
             // Rain World Startup
             On.RainWorld.Start += RainWorldStartHook;
 
-            //  On.RainWorldGame.ContinuePaused += ContinuePausedHook;
+            On.RainWorldGame.ContinuePaused += ContinuePausedHook;
 
             //ProjectedImage constructor hook for hiding LoadFile()
             On.ProjectedImage.ctor += ProjectedImageCtorHook;
@@ -31,11 +31,11 @@ namespace FivePebblesBadApple
             FivePebblesBadApple.SELF.Logger_p.LogInfo("Finished Loading Frames!");
         }
 
-        //private static void ContinuePausedHook(On.RainWorldGame.orig_ContinuePaused orig, RainWorldGame self)
-        //{
-        //    orig(self);
-        //    frameTimer = Time.time;
-        //}
+        private static void ContinuePausedHook(On.RainWorldGame.orig_ContinuePaused orig, RainWorldGame self)
+        {
+            orig(self);
+            frameTimer = Time.time;
+        }
 
         // ProjectedImage constructor hook for hiding LoadFile() (function cannot be overridden or hidden for ProjectedImage class)
         static void ProjectedImageCtorHook(On.ProjectedImage.orig_ctor orig, ProjectedImage self, List<string> imageNames, int cycleTime)
@@ -67,6 +67,7 @@ namespace FivePebblesBadApple
         // How many frames should we wait until the projected image is destroyed?
         // This is necessary to prevent the projected image flickering, and I have zero clue why!
         // Just know that 3 frames delay is the minimum to avoid flicker
+        // Also do not set this to a ridiculously high value otherwise you will run out of memory before the video finishes :(
         const int IMAGE_DESTRUCTION_FRAME_DELAY = 3;
 
         // We need to delay the destruction of a projected image's corresponding atlas, otherwise the game will freeze as the image will be missing its texture!
@@ -91,6 +92,7 @@ namespace FivePebblesBadApple
 
         private static float missedFramesTimer;
 
+        // Queues are used to delay the deletion of the projected images and the atlases
         private static Queue<ProjectedImage> projectedImageQueue = new Queue<ProjectedImage>();
         private static Queue<string> atlasQueue = new Queue<string>();
 
