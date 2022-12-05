@@ -8,28 +8,79 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="BadApple.mp4" />
+    <None Remove="Frames\00000001.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="Assembly-CSharp">
       <HintPath>RainWorld_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="BepInEx">
       <HintPath>BepInEx\core\BepInEx.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="HOOKS-Assembly-CSharp">
       <HintPath>BepInEx\plugins\PartialityWrapper\HOOKS-Assembly-CSharp.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="MonoMod.RuntimeDetour">
       <HintPath>BepInEx\core\MonoMod.RuntimeDetour.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="MonoMod.Utils">
       <HintPath>BepInEx\core\MonoMod.Utils.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine">
       <HintPath>RainWorld_Data\Managed\UnityEngine.dll</HintPath>
+      <Private>False</Private>
     </Reference>
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="copy /Y &quot;$(TargetPath)&quot; &quot;C:\Program Files (x86)\Steam\steamapps\common\Rain World Modded\BepInEx\plugins&quot;" />
   </Target>
+
+  <ItemGroup>
+    <None Remove="C:\Users\Family\.nuget\packages\accord.video.ffmpeg\3.8.0\build\swscale-4.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\Family\.nuget\packages\accord.video.ffmpeg\3.8.0\build\swresample-2.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\Family\.nuget\packages\accord.video.ffmpeg\3.8.0\build\postproc-54.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\Family\.nuget\packages\accord.video.ffmpeg\3.8.0\build\avutil-55.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\Family\.nuget\packages\accord.video.ffmpeg\3.8.0\build\avformat-57.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\Family\.nuget\packages\accord.video.ffmpeg\3.8.0\build\avfilter-6.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\Family\.nuget\packages\accord.video.ffmpeg\3.8.0\build\avdevice-57.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\Family\.nuget\packages\accord.video.ffmpeg\3.8.0\build\avcodec-57.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="C:\Users\Family\.nuget\packages\accord\3.8.0\build\Accord.dll.config" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Frames\*.png" />
+  </ItemGroup>
 
 </Project>
