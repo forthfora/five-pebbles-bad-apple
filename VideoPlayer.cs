@@ -11,7 +11,7 @@ namespace FivePebblesBadApple
     {
         // Toggles frame debug messages to Bepinex's console
         // I have no idea if these affect performance, but better safe than sorry!
-        private const bool DEBUG_MESSAGES = true;
+        private const bool DEBUG_MESSAGES = false;
 
         // How long until the video starts playing in seconds from when PlayVideo is called
         private const float START_DELAY = 0.0f;
@@ -20,8 +20,7 @@ namespace FivePebblesBadApple
         private const int FRAME_RATE = 30;
 
         // Which frame the video should end on;
-        //private const int FINAL_FRAME = 6572;
-        private const int FINAL_FRAME = 250;
+        private const int FINAL_FRAME = 6572;
 
         // How many frames should we wait until the projected image is destroyed?
         // This is necessary to prevent the projected image flickering, and I have zero clue why!
@@ -88,6 +87,7 @@ namespace FivePebblesBadApple
                 if (Time.time - startTimer <= START_DELAY) return;
 
                 FivePebblesBadApple.SELF.Logger_p.LogInfo("Started playing!");
+                self.oracle.room.PlaySound(EnumExt_Snd.BadAppleMusic, self.oracle.firstChunk.pos);
                 isVideoStarted = true;
                 frameTimer = Time.time;
                 GatherPearls(self);
@@ -99,8 +99,6 @@ namespace FivePebblesBadApple
                         self.oracle.room.game.cameras[n].ChangeBothPalettes(25, 26, 1.0f);
                     }
                 }
-
-                //self.oracle.room.PlaySound(EnumExt_FPBA.Bad_Apple, self.oracle.firstChunk);
             }
 
             // Update the pearls every frame while the video is playing

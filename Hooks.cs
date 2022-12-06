@@ -1,11 +1,15 @@
-﻿using RWCustom;
+﻿using MonoMod.Cil;
+using RWCustom;
+using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
 namespace FivePebblesBadApple
 {
-    static class Hooks
+    public static class Hooks
     {
         public static void ApplyHooks()
         {
@@ -14,7 +18,6 @@ namespace FivePebblesBadApple
 
             // When the palette (colour) of pearls is being applied
             On.DataPearl.ApplyPalette += DataPearlApplyPaletteHook;
-
 
             // When a room is loaded
             On.Room.Loaded += RoomLoadedHook;
@@ -68,7 +71,7 @@ namespace FivePebblesBadApple
                 (self.game.Players[0].realizedCreature as Player).slugcatStats.name != SlugcatStats.Name.Red)
             {
                 // Get existing coordinate from a random object in Pebbles' chamber
-                WorldCoordinate coord = self.GetWorldCoordinate(self.roomSettings.placedObjects[Random.Range(0, self.roomSettings.placedObjects.Count - 1)].pos);
+                WorldCoordinate coord = self.GetWorldCoordinate(self.roomSettings.placedObjects[UnityEngine.Random.Range(0, self.roomSettings.placedObjects.Count - 1)].pos);
 
                 // Create the pearl
                 DataPearl.AbstractDataPearl pearl = new DataPearl.AbstractDataPearl(self.world, AbstractPhysicalObject.AbstractObjectType.DataPearl, null,
@@ -203,7 +206,7 @@ namespace FivePebblesBadApple
                 switch (currentDialogue)
                 {
                     case 0:
-                        self.dialogBox.Interrupt(self.Translate("Wait... a cure for my rot? Has he finally done something useful??"), 10);
+                        self.dialogBox.Interrupt(self.Translate("Wait... a cure for my rot? Has he finally made himself useful?!"), 10);
                         break;
 
                     case 1:
@@ -211,6 +214,7 @@ namespace FivePebblesBadApple
                         break;
 
                     case 2:
+                        self.dialogBox.Interrupt(self.Translate("Man, I just can't wait to find out h-"), 0);
                         currentState = PebblesState.WatchVideo;
                         break;
                 }
