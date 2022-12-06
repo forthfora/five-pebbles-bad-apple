@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="BadApple.mp3" />
+    <None Remove="Audio.mp3" />
     <None Remove="BadApple.mp4" />
     <None Remove="Frames\00000001.png" />
   </ItemGroup>
@@ -85,7 +85,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="BadApple.mp3" />
+    <EmbeddedResource Include="Audio.mp3" />
   </ItemGroup>
 
 </Project>

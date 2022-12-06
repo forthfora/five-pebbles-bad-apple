@@ -13,14 +13,15 @@ namespace FivePebblesBadApple
         // I have no idea if these affect performance, but better safe than sorry!
         private const bool DEBUG_MESSAGES = true;
 
-        // How long until the video starts playing in seconds from when slugcat enters the room
-        private const float START_DELAY = 3.0f;
+        // How long until the video starts playing in seconds from when PlayVideo is called
+        private const float START_DELAY = 0.0f;
 
         // How many frames are displayed each second
         private const int FRAME_RATE = 30;
 
         // Which frame the video should end on;
-        private const int FINAL_FRAME = 6572;
+        //private const int FINAL_FRAME = 6572;
+        private const int FINAL_FRAME = 250;
 
         // How many frames should we wait until the projected image is destroyed?
         // This is necessary to prevent the projected image flickering, and I have zero clue why!
@@ -60,6 +61,7 @@ namespace FivePebblesBadApple
         public static bool isVideoStarted = false;
         public static bool isVideoFinished = false;
 
+        // Should have used a non-static class to make it easier to reset everything but whatever
         public static void ResetVideo(SSOracleBehavior self)
         {
             isVideoFinished = false;
@@ -68,9 +70,6 @@ namespace FivePebblesBadApple
             startTimer = null;
             currentFrame = 0;
             missedFramesTimer = 0;
-
-            while (projectedImageQueue.Count > 0) self.oracle.myScreen.room.RemoveObject(projectedImageQueue.Dequeue());
-            while (atlasQueue.Count > 0) Futile.atlasManager.ActuallyUnloadAtlasOrImage(atlasQueue.Dequeue());
         }
 
         public static void PlayVideo(SSOracleBehavior self)
@@ -91,28 +90,28 @@ namespace FivePebblesBadApple
                 FivePebblesBadApple.SELF.Logger_p.LogInfo("Started playing!");
                 isVideoStarted = true;
                 frameTimer = Time.time;
-                self.action = EnumExt_FPBA.Degeneracy_BadApple;
                 GatherPearls(self);
 
                 for (int n = 0; n < self.oracle.room.game.cameras.Length; n++)
                 {
                     if (self.oracle.room.game.cameras[n].room == self.oracle.room && !self.oracle.room.game.cameras[n].AboutToSwitchRoom)
                     {
-                        self.oracle.room.game.cameras[n].ChangeBothPalettes(26, 25, self.working);
+                        self.oracle.room.game.cameras[n].ChangeBothPalettes(25, 26, 1.0f);
                     }
                 }
 
                 //self.oracle.room.PlaySound(EnumExt_FPBA.Bad_Apple, self.oracle.firstChunk);
             }
-            else
-            {
-                // Wait until a frame in time has passed
-                if (Time.time - frameTimer < 1.0f / FRAME_RATE) return;
-            }
+
+            // Update the pearls every frame while the video is playing
+            UpdatePearls();
+
+            // Wait until a frame in time has passed
+            if (Time.time - frameTimer < 1.0f / FRAME_RATE) return;
 
             missedFramesTimer += (Time.time - frameTimer) * FRAME_RATE - 1.0f;
 
-            // Skip frames when necessary to keep in time
+            // Skip frames when necessary to keep in time, i.e. when the missed frames timer hits 1 or above
             int skippedFrames = (int)missedFramesTimer;
             currentFrame += skippedFrames;
             missedFramesTimer -= skippedFrames;
@@ -162,8 +161,10 @@ namespace FivePebblesBadApple
                 Futile.atlasManager.ActuallyUnloadAtlasOrImage(atlasQueue.Dequeue());
             }
 
+            // Add the image and atlas to the destruction queue
             projectedImageQueue.Enqueue(projectedImage);
             atlasQueue.Enqueue(frameName);
+
             currentFrame++;
 
             if (skippedFrames != 0) FivePebblesBadApple.SELF.Logger_p.LogInfo("Skipped Frames: " + skippedFrames);
@@ -177,7 +178,7 @@ namespace FivePebblesBadApple
         {
             pearls = new List<PhysicalObject>();
 
-            //gather pearls from current room
+            // Gather pearls from the room
             for (int i = 0; i < self.oracle.room.physicalObjects.Length; i++)
                 for (int j = 0; j < self.oracle.room.physicalObjects[i].Count; j++)
                     if (self.oracle.room.physicalObjects[i][j] is PebblesPearl && self.oracle.room.physicalObjects[i][j].grabbedBy.Count <= 0)
@@ -197,6 +198,7 @@ namespace FivePebblesBadApple
         {
             List<Vector2> positions = new List<Vector2>();
 
+            // This constructs a circle of pearls using sin(x) cos(y), credit to woutkolkman for the original code!
             for (int i = 0; i < pearls.Count; i++)
             {
                 float time = ((i * 2.0f / (pearls.Count - 1)) + pearlUpdateCounter / 2000.0f);
@@ -210,14 +212,19 @@ namespace FivePebblesBadApple
             return positions;
         }
 
-        private const bool PEARL_TELEPORTING = true;
+        private const bool PEARL_TELEPORTING = false;
+        const float MIN_DAMPING = 1.1f;
+        const float MAX_DAMPING = 1.9f;
+        const float MULTIPLIER = 1.5f;
 
-        public static void UpdatePearls()
+        // Thanks to woutkolkman for this pearl motion damping code!
+        private static void UpdatePearls()
         {
             List<Vector2> positions = GetPearlPositions();
 
             for (int i = 0; i < pearls.Count && i < positions.Count; i++)
             {
+                // If the distance becomes too small, we snap the pearls to their target position to prevent jitter
                 float dist = Vector2.Distance(pearls[i].firstChunk.pos, positions[i]);
                 if (dist < 3f || PEARL_TELEPORTING)
                 {
@@ -226,16 +233,12 @@ namespace FivePebblesBadApple
                     continue;
                 }
 
-                //set velocity
-                const float minDamping = 1.1f;
-                const float maxDamping = 1.9f;
-                const float multiplier = 1.5f;
-                float damping = maxDamping - dist / 10;
-                if (damping < minDamping)
-                    damping = minDamping;
+                // Set the velocity of the pearls, with damping, so they travel to their target position smoothly
+                float damping = MAX_DAMPING - dist / 10;
+                if (damping < MIN_DAMPING) damping = MIN_DAMPING;
                 pearls[i].firstChunk.vel.x /= (damping);
                 pearls[i].firstChunk.vel.y /= (damping);
-                pearls[i].firstChunk.vel += multiplier * Custom.DirVec(pearls[i].firstChunk.pos, positions[i]);
+                pearls[i].firstChunk.vel += MULTIPLIER * Custom.DirVec(pearls[i].firstChunk.pos, positions[i]);
             }
 
             pearlUpdateCounter++;

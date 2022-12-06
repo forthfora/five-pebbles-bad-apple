@@ -10,12 +10,13 @@ using UnityEngine;
 
 namespace FivePebblesBadApple
 {
+    // Enum Extender Dependency
     public static class EnumExt_FPBA
     {
-        public static SoundID Bad_Apple_Music;
-        public static SSOracleBehavior.Action Degeneracy_BadApple;
+        public static SoundID BadApple_Music;
+        public static DataPearl.AbstractDataPearl.DataPearlType BadApple_Pearl;
 
-        public static DataPearl.AbstractDataPearl.DataPearlType Bad_Apple_Pearl;
+        public static SSOracleBehavior.Action BadApple;
     }
 
 
@@ -37,7 +38,7 @@ namespace FivePebblesBadApple
         public void OnEnable() => Hooks.ApplyHooks();
 
         const string FRAMES_RESOURCE_PATH = "FivePebblesBadApple.Frames";
-        const string AUDIO_RESOURCE_PATH = "FivePebblesBadApple.BadApple.mp3";
+        const string AUDIO_RESOURCE_PATH = "FivePebblesBadApple.Audio.mp3";
 
         // Credit to LB on the RW Discord!
         // Loads all frames into the 'frames' array, each frame is an embedded resource png located under the 'Frames' directory in the assembly
@@ -86,7 +87,7 @@ namespace FivePebblesBadApple
 
                 SELF.Logger_p.LogInfo("Loaded Frame " + resourceName + " as " + frameName);
 
-                // Only load the first 500 frames to speed up loading when debugging
+                // Optionally, only load the first 500 frames to speed up loading when debugging
                 // if (index > 500) break;
             }
         }
