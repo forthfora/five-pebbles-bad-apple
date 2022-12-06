@@ -12,8 +12,10 @@ namespace FivePebblesBadApple
 {
     public static class EnumExt_FPBA
     {
-        public static SoundID Bad_Apple;
+        public static SoundID Bad_Apple_Music;
         public static SSOracleBehavior.Action Degeneracy_BadApple;
+
+        public static DataPearl.AbstractDataPearl.DataPearlType Bad_Apple_Pearl;
     }
 
 
