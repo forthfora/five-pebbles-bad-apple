@@ -13,13 +13,16 @@ namespace FivePebblesBadApple
         private const bool DEBUG_MESSAGES = false;
 
         // How long until the video starts playing in seconds from when PlayVideo is called
-        private const float START_DELAY = 0.0f;
+        private const float START_DELAY = 1.0f;
 
         // How many frames are displayed each second
         private const int FRAME_RATE = 30;
 
         // Which frame the video should end on;
         private const int FINAL_FRAME = 6572;
+
+        // Whether the palette of Pebbles' chamber should fade from black / white depending on the video
+        private const bool IS_DYNAMIC_BACKGROUND = true;
 
         // How many frames should we wait until the projected image is destroyed?
         // This is necessary to prevent the projected image flickering, and I have zero clue why!
@@ -142,34 +145,37 @@ namespace FivePebblesBadApple
             Texture2D frameTexture = new Texture2D(0, 0, TextureFormat.RGB24, true);
             frameTexture.LoadImage(textureBytes);
 
-            int blackPixelCount = 0;
-            int whitePixelCount = 0;
-
-            // How many pixels are skipped each loop when polling the screen (higher values are less accurate, but more performant)
-            const int PIXEL_POLL_INTERVAL = 50;
-
-            // Effectively how much a black pixel is worth compared to a white pixel, affects the number needed to change the background colour
-            const float BLACK_PIXEL_BIAS = 0.7f;
-
-            // Poll the image for black and white pixels, using a large interval to save performance
-            // https://answers.unity.com/questions/1321767/check-if-every-pixel-of-a-texture-is-transparent.html
-            for (int x = 0; x < frameTexture.width; x += PIXEL_POLL_INTERVAL)
+            if (IS_DYNAMIC_BACKGROUND)
             {
-                for (int y = 0; y < frameTexture.height; y += PIXEL_POLL_INTERVAL)
+                int blackPixelCount = 0;
+                int whitePixelCount = 0;
+
+                // How many pixels are skipped each loop when polling the screen (higher values are less accurate, but more performant)
+                const int PIXEL_POLL_INTERVAL = 50;
+
+                // Effectively how much a black pixel is worth compared to a white pixel, affects the number needed to change the background colour
+                const float BLACK_PIXEL_BIAS = 0.7f;
+
+                // Poll the image for black and white pixels, using a large interval to save performance
+                // https://answers.unity.com/questions/1321767/check-if-every-pixel-of-a-texture-is-transparent.html
+                for (int x = 0; x < frameTexture.width; x += PIXEL_POLL_INTERVAL)
                 {
-                    if (frameTexture.GetPixel(x, y).r <= 0.5f)
+                    for (int y = 0; y < frameTexture.height; y += PIXEL_POLL_INTERVAL)
                     {
-                        blackPixelCount += 1;
-                    }
-                    else
-                    {
-                        whitePixelCount += 1;
+                        if (frameTexture.GetPixel(x, y).r <= 0.5f)
+                        {
+                            blackPixelCount += 1;
+                        }
+                        else
+                        {
+                            whitePixelCount += 1;
+                        }
                     }
                 }
-            }
 
-            // Depending on which is greater, we can fade the background to either dark or light
-            isBackgroundBlack = blackPixelCount * BLACK_PIXEL_BIAS > whitePixelCount;
+                // Depending on which is greater, we can fade the background to either dark or light
+                isBackgroundBlack = blackPixelCount * BLACK_PIXEL_BIAS > whitePixelCount;
+            }
 
             // Using the atlas we can create a projected image, which is what is used to display images in Pebbles' chamber
             ProjectedImage projectedImage = new ProjectedImageFromMemory(new List<Texture2D> { frameTexture }, new List<string> { frameName }, 0);
