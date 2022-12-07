@@ -55,8 +55,8 @@ namespace FivePebblesBadApple
 
             if ((self.abstractPhysicalObject as DataPearl.AbstractDataPearl).dataPearlType == EnumExt_FPBA.BadApple_Pearl)
             {
-                self.color = Color.red;
-                self.highlightColor = Color.green;
+                self.color = Color.white;
+                self.highlightColor = Color.black;
             }
         }
 
@@ -325,6 +325,8 @@ namespace FivePebblesBadApple
             badApplePearl.firstChunk.vel = new Vector2(0.0f, 0.0f);
         }
 
+        // This is probably (definitely) not how you're supposed to add custom pearl dialogue, Moon seems to randomly glitch when trying to pick up the pearl
+        // This whole thing was kind of added last minute so people who actually went through the effort of giving Moon the pearl weren't too dissapointed
         private static void SLOracleBehaviorHasMarkGrabObjectHook(On.SLOracleBehaviorHasMark.orig_GrabObject orig, SLOracleBehaviorHasMark self, PhysicalObject item)
         {
             if (item is DataPearl)
@@ -346,7 +348,7 @@ namespace FivePebblesBadApple
 
         // Moon Dialogue
         // There might be a bug where Moon will say 'This one again?' even though she has never seen the pearl before
-        // I'm too lazy to debug it though... like who will read this anyway, right? ...right?
+        // (don't tell anyone, I'm too lazy to try and fix it)
         static void SLOracleBehaviorHasMarkMoonConversationAddEventsHook(On.SLOracleBehaviorHasMark.MoonConversation.orig_AddEvents orig, MoonConversation self)
         {
             orig(self);
