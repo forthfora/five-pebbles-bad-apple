@@ -10,7 +10,7 @@ Dependencies:
 # Credits
 As the first mod I have ever made for Rain World, you are legally not allowed to judge this code!
 
-Seriously though, it's not pretty, but huge thanks to those who helped me on the RW Discord, especially Slime_Cubed and Wack for showing me how to play audio!
+Seriously though, it's not pretty, but huge thanks to those who helped me on the RW Discord, especially Slime_Cubed, Bro and Wack for answering my questions and showing me how to play audio!
 
 Woultkolkman's FivePebblesPong mod was used as a reference for a large part of this mod, so huge thanks to them too!
 
