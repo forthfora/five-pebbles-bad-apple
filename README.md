@@ -27,17 +27,38 @@ BEWARE! There might be a memory leak issue with the audio player, so playing the
 
 Overall, just don't expect this mod to be 100% stable, at all!
 
-# Custom Video
+# Adding a Custom Video
 
-If you want to add your own video and sound, you need to first convert the video into individual png images, one for each frame (you could do this with something like ffmpeg)!
+This guide is intended for Windows! It may work on other OSes, but the process will likely be different!
 
-You can download videos off of Youtube with a tool such as yt-dlp!
+YTdlp is very useful for downloading videos off of youtube, you can get it from the releases section here: https://github.com/yt-dlp/yt-dlp
 
-Make sure the frames are not too large! The game will crash otherwise! The videos I have tested with were 480x360 - after this, you just replace all the frames in the frames folder with your frames!
+ffmpeg is a must for manipulating the video you want to add! You can get it from this link: https://www.gyan.dev/ffmpeg/builds/
 
-Make sure that all the frame pngs are in alphabetical order by name, so that the video plays in the correct order!
+Bear in mind you will need a file archive editing tool, like 7Zip or WinRAR to extract the archive - the only thing you'll need is the ffmpeg.exe file from the bin folder! 
 
-Also, the video you use should be 30 fps - you can change the framerate if you modify the constant in the Hooks script and compile the dll yourself, but the performance would probably suffer at higher values!
+I recommend moving these to a temporary folder - in the File Explorer search bar type in "cmd" to open command prompt at that location!
 
-For sound, you need a wav file of the videos audio (ffmpeg can extract the audio from a video file), and just replace the wav file in the Sounds directory with your audio file - just make sure it is named BadAppleMusic.wav!
+These tools are used entirely through command prompt, and they are very powerful! Here are the commands you will need:
+
+Downloads the supplied YouTube link as an mp4 file, just replace the link in the quotes with the one you want!
+yt-dlp.exe "https://www.youtube.com/watch?v=dQw4w9WgXcQ" -f mp4
+
+Converts the supplied video into an audio wav file, which is the format Rain World uses!
+ffmpeg.exe -i "video.mp4" "music.wav"
+
+Converts the supplied video to a certain size ("100:100" converts the video to a 100x100 pixel size)
+This is necessary to shrink large videos down so that they both fit in Pebbles' chamber, and do not cause the game to run out of memory!
+Both videos I tested with were scaled to 480x360, but you could probably go a little bigger than that
+ffmpeg.exe -i "video.mp4" -vf scale="100:100" "output.mp4"
+
+BE CAREFUL WITH THIS ONE! Extracts all the frames of the supplied video (here "video.mp4"), the flag -r denotes the framerate (here 30fps) TO THE FOLDER IT IS RUN IN
+Don't do this on your desktop for example, unless you want thousands of pngs and a huge mess to clean up! Make a temporary folder!
+ffmpeg.exe -i "video.mp4" -r 30 %08d.png
+
+Finally, you can add them to the DLL and compile: download the source code from github, and replace all of the pngs in the Frames folder with the pngs youextracted from your video!
+
+Replace the BadAppleMusic.wav file in the Sounds folder with you wav file, just make sure you rename it to BadAppleMusic.wav!
+
+Open the .sln file in VS, and build the .dll! Hopefully it should now be able to be installed and will play your video!
 
