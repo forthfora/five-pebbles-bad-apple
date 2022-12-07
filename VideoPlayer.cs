@@ -148,7 +148,11 @@ namespace FivePebblesBadApple
             int blackPixelCount = 0;
             int whitePixelCount = 0;
 
-            const int PIXEL_POLL_INTERVAL = 100;
+            // How many pixels are skipped each loop when polling the screen (higher values are less accurate, but more performant)
+            const int PIXEL_POLL_INTERVAL = 50;
+
+            // Effectively how much a black pixel is worth compared to a white pixel, affects the number needed to change the background colour
+            const float BLACK_PIXEL_BIAS = 0.7f;
 
             // Poll the image for black and white pixels, using a large interval to save performance
             // https://answers.unity.com/questions/1321767/check-if-every-pixel-of-a-texture-is-transparent.html
@@ -168,9 +172,7 @@ namespace FivePebblesBadApple
             }
 
             // Depending on which is greater, we can fade the background to either dark or light
-            isBackgroundBlack = blackPixelCount > whitePixelCount;
-
-
+            isBackgroundBlack = blackPixelCount * BLACK_PIXEL_BIAS > whitePixelCount;
 
             // Using the atlas we can create a projected image, which is what is used to display images in Pebbles' chamber
             ProjectedImage projectedImage = new ProjectedImageFromMemory(new List<Texture2D> { frameTexture }, new List<string> { frameName }, 0);
