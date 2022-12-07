@@ -20,7 +20,7 @@ namespace FivePebblesBadApple
         public static Conversation.ID BadApple_Pearl_Conversation;
     }
 
-    [BepInPlugin("forthbridge.five_pebbles_bad_apple", "FivePebblesBadApple", "0.1.0")]
+    [BepInPlugin("forthbridge.five_pebbles_bad_apple", "FivePebblesBadApple", "1.0.0")]
     public class FivePebblesBadApple : BaseUnityPlugin
     {
         #region BepInEx Logger
