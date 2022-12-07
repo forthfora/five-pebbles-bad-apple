@@ -23,7 +23,9 @@ This also means Pebbles will always kill you...
 
 On Hunter, the pearl will be in Hunter's stomach from the start - the video will begin playing when you enter the chamber with the pearl in hand!
 
-BEWARE! It seems there is a memory leak problem with the audio player, so playing the video more than 2 times after launching the game may or may not crash the game with an 'out of memory' exception! Sometimes it's fine, sometimes it's not!
+BEWARE! There might be a memory leak issue with the audio player, so playing the video more than 2 times after launching the game may or may not crash the game with an 'out of memory' exception! Sometimes it's fine, sometimes it's not!
+
+Overall, just don't expect this mod to be 100% stable, at all!
 
 # Custom Video
 
