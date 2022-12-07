@@ -60,9 +60,9 @@ Don't do this on your desktop for example, unless you want thousands of pngs and
 
   `ffmpeg.exe -i "video.mp4" -r 30 %08d.png`
 
-Finally, you can add them to the DLL and compile: download the source code from github, and replace all of the pngs in the Frames folder with the pngs youextracted from your video!
+Finally, you can add them to the DLL and compile: download the source code from github, and replace all of the pngs in the Frames folder with the pngs you extracted from your video!
 
-Replace the BadAppleMusic.wav file in the Sounds folder with you wav file, just make sure you rename it to BadAppleMusic.wav!
+Replace the BadAppleMusic.wav file in the Sounds folder with your wav file, just make sure you rename it to BadAppleMusic.wav!
 
 Open the .sln file in VS, and build the .dll! Hopefully it should now be able to be installed and will play your video!
 
