@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using static SlugcatStats;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace FivePebblesBadApple
 {
@@ -60,11 +62,15 @@ namespace FivePebblesBadApple
         public static bool isVideoStarted = false;
         public static bool isVideoFinished = false;
 
+        private static float fadePalette = 0.0f;
+        private static bool isBackgroundBlack = false;
+
         // Should have used a non-static class to make it easier to reset everything but whatever
         public static void ResetVideo(SSOracleBehavior self)
         {
             isVideoFinished = false;
             isVideoStarted = false;
+            isBackgroundBlack = false;
 
             startTimer = null;
             currentFrame = 0;
@@ -91,18 +97,20 @@ namespace FivePebblesBadApple
                 isVideoStarted = true;
                 frameTimer = Time.time;
                 GatherPearls(self);
-
-                for (int n = 0; n < self.oracle.room.game.cameras.Length; n++)
-                {
-                    if (self.oracle.room.game.cameras[n].room == self.oracle.room && !self.oracle.room.game.cameras[n].AboutToSwitchRoom)
-                    {
-                        self.oracle.room.game.cameras[n].ChangeBothPalettes(25, 26, 1.0f);
-                    }
-                }
             }
 
             // Update the pearls every frame while the video is playing
             UpdatePearls();
+
+            // We do this before the frame timer because it must update every frame to override the game's palette changing
+            if (isBackgroundBlack)
+            {
+                FadeToBlack(self);
+            }
+            else
+            {
+                FadeToWhite(self);
+            }
 
             // Wait until a frame in time has passed
             if (Time.time - frameTimer < 1.0f / FRAME_RATE) return;
@@ -137,6 +145,33 @@ namespace FivePebblesBadApple
             Texture2D frameTexture = new Texture2D(0, 0, TextureFormat.RGB24, true);
             frameTexture.LoadImage(textureBytes);
 
+            int blackPixelCount = 0;
+            int whitePixelCount = 0;
+
+            const int PIXEL_POLL_INTERVAL = 100;
+
+            // Poll the image for black and white pixels, using a large interval to save performance
+            // https://answers.unity.com/questions/1321767/check-if-every-pixel-of-a-texture-is-transparent.html
+            for (int x = 0; x < frameTexture.width; x += PIXEL_POLL_INTERVAL)
+            {
+                for (int y = 0; y < frameTexture.height; y += PIXEL_POLL_INTERVAL)
+                {
+                    if (frameTexture.GetPixel(x, y).r <= 0.5f)
+                    {
+                        blackPixelCount += 1;
+                    }
+                    else
+                    {
+                        whitePixelCount += 1;
+                    }
+                }
+            }
+
+            // Depending on which is greater, we can fade the background to either dark or light
+            isBackgroundBlack = blackPixelCount > whitePixelCount;
+
+
+
             // Using the atlas we can create a projected image, which is what is used to display images in Pebbles' chamber
             ProjectedImage projectedImage = new ProjectedImageFromMemory(new List<Texture2D> { frameTexture }, new List<string> { frameName }, 0);
 
@@ -165,7 +200,7 @@ namespace FivePebblesBadApple
 
             currentFrame++;
 
-            if (skippedFrames != 0) FivePebblesBadApple.SELF.Logger_p.LogInfo("Skipped Frames: " + skippedFrames);
+            if (DEBUG_MESSAGES && skippedFrames != 0) FivePebblesBadApple.SELF.Logger_p.LogInfo("Skipped Frames: " + skippedFrames);
             if (DEBUG_MESSAGES) FivePebblesBadApple.SELF.Logger_p.LogInfo("Displaying Frame " + currentFrame + ": " + frameName);
         }
 
@@ -240,6 +275,34 @@ namespace FivePebblesBadApple
             }
 
             pearlUpdateCounter++;
+        }
+
+        private static void FadeToBlack(SSOracleBehavior self)
+        {
+            // Change Palette
+            for (int n = 0; n < self.oracle.room.game.cameras.Length; n++)
+            {
+                if (self.oracle.room.game.cameras[n].room == self.oracle.room && !self.oracle.room.game.cameras[n].AboutToSwitchRoom)
+                {
+                    if (fadePalette < 1.0f) fadePalette += 0.05f;
+                    if (fadePalette > 1.0f) fadePalette = 1.0f;
+                    self.oracle.room.game.cameras[n].ChangeBothPalettes(25, 26, fadePalette);
+                }
+            }
+        }
+
+        private static void FadeToWhite(SSOracleBehavior self)
+        {
+            // Change Palette
+            for (int n = 0; n < self.oracle.room.game.cameras.Length; n++)
+            {
+                if (self.oracle.room.game.cameras[n].room == self.oracle.room && !self.oracle.room.game.cameras[n].AboutToSwitchRoom)
+                {
+                    if (fadePalette > 0.0f) fadePalette -= 0.05f;
+                    if (fadePalette < 0.0f) fadePalette = 0f;
+                    self.oracle.room.game.cameras[n].ChangeBothPalettes(25, 26, fadePalette);
+                }
+            }
         }
     }
 }

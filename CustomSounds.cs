@@ -75,7 +75,6 @@ namespace FivePebblesBadApple
                 int lastLine = lines.Length;
                 Array.Resize(ref lines, lines.Length + EnumExt_Snd.soundLines.Length);
                 EnumExt_Snd.soundLines.CopyTo(lines, lastLine);
-                foreach (var item in lines) FivePebblesBadApple.SELF.Logger_p.LogWarning(item);
                 return lines;
             });
         }

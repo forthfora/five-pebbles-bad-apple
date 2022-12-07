@@ -14,10 +14,9 @@ namespace FivePebblesBadApple
     {
         public static bool HasEmbedded(string name) => Assembly.GetExecutingAssembly().GetManifestResourceStream($"FivePebblesBadApple.Sounds.{name}.wav") != null;
 
-
         public static AudioClip GetEmbedded(string name)
         {
-            var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"FivePebblesBadApple.Sounds.{name}.wav");
+            using var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"FivePebblesBadApple.Sounds.{name}.wav");
             var buffer = new byte[stream.Length];
             stream.Read(buffer, 0, buffer.Length);
 

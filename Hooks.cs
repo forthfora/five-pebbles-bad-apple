@@ -164,6 +164,9 @@ namespace FivePebblesBadApple
         // Keeps track of which line of dialogue we are showing
         private static int currentDialogue = 0;
 
+        // Used to gradually fade the palette's colour
+        private static float fadePalette = 0.0f;
+
         private static void SSOracleBehaviorUpdateHook(On.SSOracleBehavior.orig_Update orig, SSOracleBehavior self, bool eu)
         {
             orig(self, eu);
@@ -226,6 +229,17 @@ namespace FivePebblesBadApple
             // Ditto + code repetition!
             else if (currentState == PebblesState.Dissapointment)
             {
+                // Change Palette
+                for (int n = 0; n < self.oracle.room.game.cameras.Length; n++)
+                {
+                    if (self.oracle.room.game.cameras[n].room == self.oracle.room && !self.oracle.room.game.cameras[n].AboutToSwitchRoom)
+                    {
+                        if (fadePalette > 0.0f) fadePalette -= 0.05f;
+                        if (fadePalette < 0.0f) fadePalette = 0.0f;
+                        self.oracle.room.game.cameras[n].ChangeBothPalettes(25, 26, fadePalette);
+                    }
+                }
+
                 if (Time.time - dialogueTimer <= DIALOGUE_DELAY) return;
 
                 switch (currentDialogue)
