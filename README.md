@@ -65,5 +65,8 @@ Replace the BadAppleMusic.wav file in the Sounds folder with your wav file, just
 
 Open the .sln file in VS, and build the .dll! Hopefully it should now be able to be installed and will play your video!
 
+There are also a bunch of const parameters in the mod itself you can mess around with, the comments should explain what most of them do!  
+All the important ones are found in the VideoPlayer script!
+
 If you need any help, or want me to convert a certain video for you, feel free to ask!
 
