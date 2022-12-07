@@ -14,7 +14,7 @@ Seriously though, it's not pretty, but huge thanks to those who helped me on the
 
 Woultkolkman's FivePebblesPong mod was used as a reference for a large part of this mod, so huge thanks to them too!
 
-Please check out their mod, which is much cleaner and more technically impressive than this one:
+Please check out their mod, which I think is much cleaner and more technically impressive than this one:
 https://github.com/woutkolkman/fivepebblespong
 
 # Usage
