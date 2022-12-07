@@ -12,10 +12,9 @@ As the first mod I have ever made for Rain World, you are legally not allowed to
 
 Seriously though, it's not pretty, but huge thanks to those who helped me on the RW Discord, especially Slime_Cubed, Bro and Wack for answering my questions and showing me how to play audio!
 
-Woultkolkman's FivePebblesPong mod was used as a reference for a large part of this mod, so huge thanks to them too!
+woultkolkman's FivePebblesPong mod was used as a reference for a large part of this mod, so huge thanks to them too!
 
-Please check out their mod, which I think is much cleaner and more technically impressive than this one:
-https://github.com/woutkolkman/fivepebblespong
+Please check out their mod here: https://github.com/woutkolkman/fivepebblespong
 
 # Usage
 On Survivor / Monk, the pearl will be in Pebbles' chamber on entering, so the video sequence will start playing immediately!
@@ -31,7 +30,7 @@ Overall, just don't expect this mod to be 100% stable, at all!
 
 This guide is intended for Windows! It may work on other OSes, but the process will likely be different!
 
-- yt-dlp is very useful for downloading videos off of youtube, you can get it from the releases section here: https://github.com/yt-dlp/yt-dlp
+- yt-dlp is very useful for downloading videos off of YouTube, you can get it from the releases section here: https://github.com/yt-dlp/yt-dlp
 
 - ffmpeg is a must for manipulating the video you want to add! You can get it from this link: https://www.gyan.dev/ffmpeg/builds/
 
@@ -65,4 +64,6 @@ Finally, you can add them to the DLL and compile: download the source code from 
 Replace the BadAppleMusic.wav file in the Sounds folder with your wav file, just make sure you rename it to BadAppleMusic.wav!
 
 Open the .sln file in VS, and build the .dll! Hopefully it should now be able to be installed and will play your video!
+
+If you need any help, or want me to convert a certain video for you, feel free to ask!
 
