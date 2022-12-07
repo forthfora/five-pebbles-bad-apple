@@ -2,10 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using UnityEngine;
-using static SlugcatStats;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace FivePebblesBadApple
 {

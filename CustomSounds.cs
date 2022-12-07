@@ -1,15 +1,11 @@
-﻿using HUD;
-using MonoMod.Cil;
-using RWCustom;
+﻿using MonoMod.Cil;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
-using Object = UnityEngine.Object;
-using Random = UnityEngine.Random;
 
 // Huge thanks to Slime_Cubed for sending me this code, as well as Wack and Bro for helping me!
+// The following is the guide on how to use this system, it was not created in any part by me!
 /*
 
 Hi!

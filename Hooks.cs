@@ -1,10 +1,5 @@
-﻿using MonoMod.Cil;
-using RWCustom;
-using System;
+﻿using RWCustom;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
 using UnityEngine;
 using static SLOracleBehaviorHasMark;
 
