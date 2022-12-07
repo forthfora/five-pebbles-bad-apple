@@ -1,11 +1,9 @@
 # Install
-Download and install BOI / BepInEx: https://rainworldmodding.miraheze.org/wiki/BOI#Installation
+- Download and install BOI / BepInEx: https://rainworldmodding.miraheze.org/wiki/BOI#Installation
+- Download the most recent .dll from the releases page and place it in the /Rain World/Mods folder!
 
-Download the most recent .dll from the releases page and place it in the /Rain World/Mods folder!
-
-# Dependencies:
-
-EnumExtender.dll (this should come with BOI's automatic BepInEx installation!)
+Dependencies:
+- EnumExtender.dll (this should come with BOI's automatic BepInEx installation!)
 
 # Credits
 As the first mod I have ever made for Rain World, you are legally not allowed to judge this code!
