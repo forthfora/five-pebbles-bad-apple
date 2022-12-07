@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
+using static SLOracleBehaviorHasMark;
 
 namespace FivePebblesBadApple
 {
@@ -36,6 +37,10 @@ namespace FivePebblesBadApple
 
             // Five Pebbles Update
             On.SSOracleBehavior.Update += SSOracleBehaviorUpdateHook;
+
+            // Moon Pearl Dialogue
+            On.SLOracleBehaviorHasMark.GrabObject += SLOracleBehaviorHasMarkGrabObjectHook;
+            On.SLOracleBehaviorHasMark.MoonConversation.AddEvents += SLOracleBehaviorHasMarkMoonConversationAddEventsHook;
         }
 
         private static void RainWorldStartHook(On.RainWorld.orig_Start orig, RainWorld self)
@@ -55,8 +60,8 @@ namespace FivePebblesBadApple
 
             if ((self.abstractPhysicalObject as DataPearl.AbstractDataPearl).dataPearlType == EnumExt_FPBA.BadApple_Pearl)
             {
-                self.color = new Color(1.0f, 1.0f, 1.0f);
-                self.highlightColor = new Color(0.0f, 0.0f, 0.0f);
+                self.color = Color.red;
+                self.highlightColor = Color.green;
             }
         }
 
@@ -323,6 +328,41 @@ namespace FivePebblesBadApple
             Vector2 handPositon = (self.oracle.graphicsModule as OracleGraphics).hands[1].pos;
             badApplePearl.firstChunk.pos = handPositon;
             badApplePearl.firstChunk.vel = new Vector2(0.0f, 0.0f);
+        }
+
+        private static void SLOracleBehaviorHasMarkGrabObjectHook(On.SLOracleBehaviorHasMark.orig_GrabObject orig, SLOracleBehaviorHasMark self, PhysicalObject item)
+        {
+            if (item is DataPearl)
+            {
+                if ((item as DataPearl).AbstractPearl.dataPearlType == EnumExt_FPBA.BadApple_Pearl)
+                {
+                    Conversation.ID id = EnumExt_FPBA.BadApple_Pearl_Conversation;
+
+                    self.currentConversation = new MoonConversation(id, self, MiscItemType.NA);
+                    self.State.significantPearls[(int)(item as DataPearl).AbstractPearl.dataPearlType] = true;
+                    self.State.totalPearlsBrought++;
+                    Debug.Log("pearls brought up: " + self.State.totalPearlsBrought);
+                    return;
+                }
+            }
+
+            orig(self, item);
+        }
+
+        // Moon Dialogue
+        // There might be a bug where Moon will say 'This one again?' even though she has never seen the pearl before
+        // I'm too lazy to debug it though... like who will read this anyway, right? ...right?
+        static void SLOracleBehaviorHasMarkMoonConversationAddEventsHook(On.SLOracleBehaviorHasMark.MoonConversation.orig_AddEvents orig, MoonConversation self)
+        {
+            orig(self);
+
+            if (self.id == EnumExt_FPBA.BadApple_Pearl_Conversation)
+            {
+                self.events.Add(new Conversation.TextEvent(self, 10, self.Translate("Another pearl from NSH? What could this mea-"), 0));
+                self.events.Add(new Conversation.TextEvent(self, 10, self.Translate("Ah... I see..."), 0));
+                self.events.Add(new Conversation.TextEvent(self, 10, self.Translate("Yes, I think Pebbles would enjoy this!"), 0));
+                self.events.Add(new Conversation.TextEvent(self, 10, self.Translate("Why don't you try giving it to him? I'm sure he'd love to play it for you!"), 0));
+            }
         }
     }
 }

@@ -16,6 +16,8 @@ namespace FivePebblesBadApple
     {
         public static DataPearl.AbstractDataPearl.DataPearlType BadApple_Pearl;
         public static SSOracleBehavior.Action BadApple;
+
+        public static Conversation.ID BadApple_Pearl_Conversation;
     }
 
     [BepInPlugin("forthbridge.five_pebbles_bad_apple", "FivePebblesBadApple", "0.1.0")]
@@ -29,6 +31,9 @@ namespace FivePebblesBadApple
         public FivePebblesBadApple() => self = new WeakReference(this);
         #endregion
 
+
+        const string FRAMES_RESOURCE_PATH = "FivePebblesBadApple.Frames";
+
         public static Dictionary<string, byte[]> frames = new Dictionary<string, byte[]>();
 
         // The application of all hooks is delegated to a static class
@@ -37,8 +42,6 @@ namespace FivePebblesBadApple
             Hooks.ApplyHooks();
             CustomSounds.ApplyHooks();
         }
-
-        const string FRAMES_RESOURCE_PATH = "FivePebblesBadApple.Frames";
 
         // Credit to LB on the RW Discord!
         // Loads all frames into the 'frames' array, each frame is an embedded resource png located under the 'Frames' directory in the assembly
