@@ -24,3 +24,18 @@ This also means Pebbles will always kill you...
 On Hunter, the pearl will be in Hunter's stomach from the start - the video will begin playing when you enter the chamber with the pearl in hand!
 
 BEWARE! It seems there is a memory leak problem with the audio player, so playing the video more than 2 times after launching the game may or may not crash the game with an 'out of memory' exception! Sometimes it's fine, sometimes it's not!
+
+# Custom Video
+
+If you want to add your own video and sound, you need to first convert the video into individual png images, one for each frame (you could do this with something like ffmpeg)!
+
+You can download videos off of Youtube with a tool such as yt-dlp!
+
+Make sure the frames are not too large! The game will crash otherwise! The videos I have tested with were 480x360 - after this, you just replace all the frames in the frames folder with your frames!
+
+Make sure that all the frame pngs are in alphabetical order by name, so that the video plays in the correct order!
+
+Also, the video you use should be 30 fps - you can change the framerate if you modify the constant in the Hooks script and compile the dll yourself, but the performance would probably suffer at higher values!
+
+For sound, you need a wav file of the videos audio (ffmpeg can extract the audio from a video file), and just replace the wav file in the Sounds directory with your audio file - just make sure it is named BadAppleMusic.wav!
+
