@@ -68,5 +68,7 @@ Open the .sln file in VS, and build the .dll! Hopefully it should now be able to
 There are also a bunch of const parameters in the mod itself you can mess around with, the comments should explain what most of them do!  
 All the important ones are found in the VideoPlayer script!
 
+- Don't forget to adjust the FINAL_FRAME and FRAME_RATE parameters in VideoPlayer to match your video!
+
 If you need any help, or want me to convert a certain video for you, feel free to ask!
 
