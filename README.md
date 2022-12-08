@@ -48,11 +48,11 @@ These tools are used entirely through command prompt, and they are very powerful
 
   `ffmpeg.exe -i "video.mp4" "music.wav"`
 
-- Converts the supplied video to a certain size ("100:100" converts the video to a 100x100 pixel size)  
+- Converts the supplied video to a certain size ("480:360" converts the video to a 480x360 pixel size)  
 This is necessary to shrink large videos down so that they both fit in Pebbles' chamber, and do not cause the game to run out of memory!  
-Both videos I tested with were scaled to 480x360, it seems there is a hard limit on the size much past that, which will cause the game to crash / texture atlases to glitch out
+Both videos I tested with were scaled to 480x360, if the png files generated are especially large, you might run into issues!
 
-  `ffmpeg.exe -i "video.mp4" -vf scale="100:100" "output.mp4"`
+  `ffmpeg.exe -i "video.mp4" -vf scale="480:360" "output.mp4"`
 
 - BE CAREFUL WITH THIS ONE! Extracts all the frames of the supplied video (here "video.mp4"), the flag -r denotes the framerate (here 30fps) TO THE FOLDER IT IS RUN IN  
 Don't do this on your desktop for example, unless you want thousands of pngs and a huge mess to clean up! Make a temporary folder!  
