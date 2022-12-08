@@ -7,6 +7,23 @@
 Dependencies:
 - EnumExtender.dll (this should come with BOI's automatic BepInEx installation!)
 
+# Stability & Known Issues
+
+This mod is quite unstable, and the crashes that occur are seemingly incredibly inconsistent!!
+Overall though, here are some things you could avoid / try if it isn't working as intended:
+
+- Create a new game with survivor / monk before installing! Creating a new game with Hunter seems fine, but for some reason, creating a new game with Survivor especially sometimes seems to crash!
+
+- Usually the first time you play the video upon opening the game is fine, and each consecutive play SHOULD be fine, but sometimes the game just decides to stop working! In testing, I've had the video play fine 5 times in a row, and other times crash on the second play!
+
+- Picking up the pearls in Pebbles' chamber will cause his dialogue to glitch out, but otherwise the video shouldn't be affected
+
+- Pausing will pause the video, but not the audio! This will cause them to fall out of sync when you resume
+
+- Also, I don't recommend exiting while a video is playing - I'm not sure, but it seems to make the game more likely to crash when you play the video again
+
+- I'm not sure how compatible this mod is with others - I've tried it with ManyMoreFixes as well as Sharpener, and it seems fine, but I would think that mods that affect Pebbles especially (such as FivePebblesPong) are likely to break!
+
 # Credits
 As the first mod I have ever made for Rain World, you are legally not allowed to judge this code!
 
