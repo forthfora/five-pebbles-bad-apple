@@ -54,7 +54,7 @@ Both videos I tested with were scaled to 480x360, if the png files generated are
 
   `ffmpeg.exe -i "video.mp4" -vf scale="480:360" "output.mp4"`
 
-- BE CAREFUL WITH THIS ONE! Extracts all the frames of the supplied video (here "video.mp4"), the flag -r denotes the framerate (here 30fps) TO THE FOLDER IT IS RUN IN  
+- BE CAREFUL WITH THIS ONE! Extracts all the frames of the supplied video (here "video.mp4") TO THE FOLDER IT IS RUN IN  
 Don't do this on your desktop for example, unless you want thousands of pngs and a huge mess to clean up! Make a temporary folder!  
 
   `ffmpeg.exe -i video.mp4 %08d.png`
