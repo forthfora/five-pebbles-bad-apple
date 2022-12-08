@@ -24,6 +24,8 @@ Overall though, here are some things you could avoid / try if it isn't working a
 
 - I'm not sure how compatible this mod is with others - I've tried it with ManyMoreFixes as well as Sharpener, and it seems fine, but I would think that mods that affect Pebbles especially (such as FivePebblesPong) are likely to break!
 
+- The mod shouldn't permanently affect the game in any way after removal, though if you save the pearl in a shelter and remove it, it might break the save! As with any mod I highly recommend backing up your saves first if you care about them!
+
 # Credits
 As the first mod I have ever made for Rain World, you are legally not allowed to judge this code!
 
