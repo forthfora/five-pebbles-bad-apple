@@ -50,7 +50,7 @@ These tools are used entirely through command prompt, and they are very powerful
 
 - Converts the supplied video to a certain size ("100:100" converts the video to a 100x100 pixel size)  
 This is necessary to shrink large videos down so that they both fit in Pebbles' chamber, and do not cause the game to run out of memory!  
-Both videos I tested with were scaled to 480x360, but you could probably go a little bigger than that  
+Both videos I tested with were scaled to 480x360, it seems there is a hard limit on the size much past that, which will cause the game to crash / texture atlases to glitch out
 
   `ffmpeg.exe -i "video.mp4" -vf scale="100:100" "output.mp4"`
 
