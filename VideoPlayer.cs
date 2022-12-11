@@ -16,13 +16,13 @@ namespace FivePebblesBadApple
         private const float START_DELAY = 1.0f;
 
         // How many frames are displayed each second
-        private const int FRAME_RATE = 30;
+        private const int FRAME_RATE = 25;
 
         // Which frame the video should end on;
-        private const int FINAL_FRAME = 6572;
+        private const int FINAL_FRAME = 1505;
 
         // Whether the palette of Pebbles' chamber should fade from black / white depending on the video
-        private const bool IS_DYNAMIC_BACKGROUND = true;
+        private const bool IS_DYNAMIC_BACKGROUND = false;
 
         // How many frames should we wait until the projected image is destroyed?
         // This is necessary to prevent the projected image flickering, and I have zero clue why!
