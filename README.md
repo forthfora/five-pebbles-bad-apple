@@ -12,7 +12,7 @@ Dependencies:
 This mod is quite unstable, and the crashes that occur are seemingly incredibly inconsistent!!
 Overall though, here are some things you could avoid / try if it isn't working as intended:
 
-- Create a new game with Survivor / Monk before installing! Creating a new game with Hunter seems fine, but for some reason, creating a new game with Survivor especially sometimes seems to crash!
+- Create a new game with survivor / monk before installing! Creating a new game with Hunter seems fine, but for some reason, creating a new game with Survivor especially sometimes seems to crash!
 
 - Usually the first time you play the video upon opening the game is fine, and each consecutive play SHOULD be fine, but sometimes the game just decides to stop working! In testing, I've had the video play fine 5 times in a row, and other times crash on the second play!
 
@@ -36,15 +36,14 @@ woultkolkman's FivePebblesPong mod was used as a reference for a large part of t
 Please check out their mod here: https://github.com/woutkolkman/fivepebblespong
 
 # Usage
-
-Highly recommend making a new game and hibernating before installing, so that the save says 'Continue', especially for Survivor / Monk!
-
 On Survivor / Monk, the pearl will be in Pebbles' chamber on entering, so the video sequence will start playing immediately!
 This also means Pebbles will always kill you... 
 
 On Hunter, the pearl will be in Hunter's stomach from the start - the video will begin playing when you enter the chamber with the pearl in hand!
 
-And just don't expect this mod to be stable, like, at all!
+BEWARE! There might be a memory leak issue with the audio player, so playing the video more than 2 times after launching the game may or may not crash the game with an 'out of memory' exception! Sometimes it's fine, sometimes it's not!
+
+Overall, just don't expect this mod to be 100% stable, at all!
 
 # Adding a Custom Video
 
@@ -91,4 +90,6 @@ All the important ones are found in the VideoPlayer script!
 - Don't forget to adjust the FINAL_FRAME and FRAME_RATE parameters in VideoPlayer to match your video!
 
 If you need any help, or want me to convert a certain video for you, feel free to ask!
+
+
 
