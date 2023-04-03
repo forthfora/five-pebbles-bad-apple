@@ -1,4 +1,4 @@
-# This mod was intended for RW v1.5, a rewrite is required for RW v1.9 - this version will not be recieving any more updates!
+# This mod was made for RW v1.5, a rewrite is required for RW v1.9 - this version will not be recieving any more updates!
 
 # Install
 - Download and install BOI / BepInEx: https://rainworldmodding.miraheze.org/wiki/BOI#Installation
